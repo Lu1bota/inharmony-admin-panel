@@ -88,6 +88,13 @@ export interface GetCollectionByIdParams {
   id: string;
 }
 
+export interface getCollectionsTagsRes {
+  _id: string;
+  title: string;
+  language: Locale;
+  value: string;
+}
+
 export interface CreateCollectionRequest {
   title: string;
   image: File;
@@ -214,4 +221,30 @@ export interface TeammateBody {
   description: string;
   image: File;
   locale: Locale;
+}
+
+// Stats Types
+
+export interface StatsInfo {
+  amount: number;
+  description: string;
+  _id: string;
+}
+
+export interface getStatsRes {
+  fedPeople: StatsInfo;
+  providedWithClothing: StatsInfo;
+  providedWithWater: StatsInfo;
+  receivedMedications: StatsInfo;
+  fedAnimals: StatsInfo;
+  providedWithElectricity: StatsInfo;
+}
+
+export interface upsertStatsBody {
+  fedPeople: number;
+  providedWithClothing: number;
+  providedWithWater: number;
+  receivedMedications: number;
+  fedAnimals: number;
+  providedWithElectricity: number;
 }

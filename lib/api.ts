@@ -2,7 +2,9 @@ import {
   Collection,
   CreateCollectionRequest,
   GetCollectionByIdParams,
+  getCollectionsTagsRes,
   getReportsRes,
+  getStatsRes,
   Locale,
   loginUserBody,
   MerchBody,
@@ -15,6 +17,7 @@ import {
   Teammates,
   TeammatesRes,
   UpdateCollectionRequest,
+  upsertStatsBody,
   UserBody,
   UserRes,
 } from "@/types";
@@ -55,7 +58,16 @@ export async function registerUser(payload: UserBody) {
 
 export async function getUsers() {
   try {
-    const res = await api.get<UserRes>("/auth/users");
+    const res = await api.get<UserRes[]>("/auth/users");
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getUserCurrent() {
+  try {
+    const res = await api.get<UserRes>("/auth/users/current");
     return res.data;
   } catch (error) {
     throw error;
@@ -116,7 +128,7 @@ export async function getCollectionById({
 
 export async function getCollectionsTags() {
   try {
-    const res = await api.get("/collections/tags");
+    const res = await api.get<getCollectionsTagsRes[]>("/collections/tags");
     return res.data;
   } catch (error) {
     throw error;
@@ -196,7 +208,7 @@ export async function deleteCollection(locale: Locale, id: string) {
 
 export async function getReports(locale: Locale) {
   try {
-    const res = await api.get<getReportsRes>("/reports", { params: locale });
+    const res = await api.get<getReportsRes[]>("/reports", { params: locale });
     return res.data;
   } catch (error) {
     throw error;
@@ -233,7 +245,7 @@ export async function deleteReport(id: string) {
 
 export async function getPartners() {
   try {
-    const res = await api.get<PartnersRes>("/partners");
+    const res = await api.get<PartnersRes[]>("/partners");
     return res.data;
   } catch (error) {
     throw error;
@@ -285,7 +297,6 @@ export async function getMerch() {
   }
 }
 
-// баг при запиті
 export async function updateMerch(locale: Locale, payload: MerchBody) {
   try {
     const res = await api.patch<MerchReq>(`/merch/${locale}`, payload);
@@ -299,14 +310,13 @@ export async function updateMerch(locale: Locale, payload: MerchBody) {
 
 export async function getTeammates(locale: Locale) {
   try {
-    const res = await api.get<TeammatesRes>("/teammates", { params: locale });
+    const res = await api.get<TeammatesRes[]>("/teammates", { params: locale });
     return res.data;
   } catch (error) {
     throw error;
   }
 }
 
-// баг при запиті, додати тип res, locale not alloved
 export async function updateTeammate(
   locale: Locale,
   id: string,
@@ -337,10 +347,29 @@ export async function createTeammate(payload: TeammateBody) {
   }
 }
 
-// 400 Invalid id для існуючих тімейтів
 export async function deleteTeammate(locale: Locale, id: string) {
   try {
     await api.delete(`/teammates/${id}`, { params: locale });
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Stats
+
+export async function getStats() {
+  try {
+    const res = await api.get<getStatsRes>("/stats");
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function upsertStats(payload: upsertStatsBody) {
+  try {
+    const res = await api.put("/stats", payload);
+    return res.data;
   } catch (error) {
     throw error;
   }
